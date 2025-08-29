@@ -1,6 +1,7 @@
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
 import { whisperModelService } from './WhisperModelService';
+import { whisperRealService } from './WhisperRealService';
 import { Platform } from 'react-native';
 
 interface TranscriptionSegment {
@@ -24,6 +25,7 @@ class WhisperTranscriptionService {
     const activeModel = whisperModelService.getActiveModel();
     if (activeModel) {
       this.currentModel = activeModel.id;
+      await whisperRealService.initialize(activeModel.id);
     }
   }
 
@@ -48,11 +50,12 @@ class WhisperTranscriptionService {
     this.isProcessing = true;
 
     try {
-      if (Platform.OS === 'android') {
-        return await this.transcribeWithWhisperAndroid(audioUri, modelPath, onProgress);
-      } else {
-        return await this.transcribeWithWhisperFallback(audioUri, onProgress);
-      }
+      // Initialize with selected model
+      await whisperRealService.setModel(activeModel.id);
+      
+      // Use real Whisper service
+      const result = await whisperRealService.transcribeAudio(audioUri, onProgress);
+      return result;
     } finally {
       this.isProcessing = false;
     }

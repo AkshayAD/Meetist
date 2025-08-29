@@ -140,12 +140,28 @@ export default function SettingsScreen() {
           
           <TouchableOpacity 
             style={styles.apiKeyItem}
+            onPress={() => navigation.navigate('WhisperSettings' as never)}
+          >
+            <View style={styles.settingInfo}>
+              <Text style={styles.settingLabel}>Whisper Configuration</Text>
+              <Text style={styles.settingDescription}>
+                Choose local or cloud transcription mode
+              </Text>
+            </View>
+            <View style={styles.apiKeyStatus}>
+              <Text style={styles.apiKeyStatusText}>Configure</Text>
+              <Ionicons name="chevron-forward" size={20} color="#2196F3" />
+            </View>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.apiKeyItem}
             onPress={() => navigation.navigate('WhisperModels' as never)}
           >
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>Whisper Models</Text>
+              <Text style={styles.settingLabel}>Download Models</Text>
               <Text style={styles.settingDescription}>
-                Download and manage offline transcription models
+                Download Whisper models for offline use
               </Text>
             </View>
             <View style={styles.apiKeyStatus}>
