@@ -1,0 +1,111 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main, terragon/implement-meetist-whisper-mvp]
+    paths:
+      - 'meetist/**'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type'
+        required: true
+        default: 'preview'
+        type: choice
+        options:
+          - preview
+          - production
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🏗 Setup repo
+        uses: actions/checkout@v3
+
+      - name: 🏗 Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: npm
+          cache-dependency-path: meetist/package-lock.json
+
+      - name: 🏗 Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 📦 Install dependencies
+        run: |
+          cd meetist
+          npm install
+
+      - name: 🚀 Build APK
+        run: |
+          cd meetist
+          eas build --platform android --profile preview --non-interactive --no-wait
+
+      - name: 📥 Download APK
+        if: success()
+        run: |
+          cd meetist
+          # Wait for build to complete and download
+          eas build:list --platform android --limit 1 --json > build-info.json
+          BUILD_ID=$(cat build-info.json | jq -r '.[0].id')
+          
+          # Poll for build completion
+          while true; do
+            STATUS=$(eas build:view $BUILD_ID --json | jq -r '.status')
+            if [ "$STATUS" = "finished" ]; then
+              URL=$(eas build:view $BUILD_ID --json | jq -r '.artifacts.buildUrl')
+              curl -L -o meetist.apk "$URL"
+              break
+            elif [ "$STATUS" = "errored" ]; then
+              echo "Build failed"
+              exit 1
+            fi
+            echo "Build status: $STATUS, waiting..."
+            sleep 30
+          done
+
+      - name: 📤 Upload APK as artifact
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: meetist-apk
+          path: meetist/meetist.apk
+
+      - name: 📋 Create Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.run_number }}
+          name: Meetist APK Build ${{ github.run_number }}
+          body: |
+            ## 📱 Meetist APK Release
+            
+            ### Features:
+            - 12+ AI transcription models
+            - Free tier options (Gemini, Groq, etc.)
+            - Local offline transcription
+            - Ultra-fast Groq models (200x real-time)
+            - Privacy-focused design
+            
+            ### Installation:
+            1. Download `meetist.apk` below
+            2. Enable "Install from unknown sources" in Android settings
+            3. Install and open the app
+            4. Configure your preferred transcription model in Settings
+            
+            ### Quick Start:
+            - Use Transformers.js for immediate offline use
+            - Or configure Groq/Gemini for fast cloud transcription
+            
+          files: meetist/meetist.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
