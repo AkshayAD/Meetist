@@ -7,12 +7,14 @@ import { RootStackParamList, BottomTabParamList } from '../types';
 
 // Import screens
 import HomeScreen from '../screens/HomeScreen';
-import RecordingScreen from '../screens/RecordingScreenFinal';
+import RecordingScreen from '../screens/RecordingScreenReal';
 import MeetingsScreen from '../screens/MeetingsScreen';
 import MeetingDetailScreen from '../screens/MeetingDetailScreen';
 import SettingsScreen from '../screens/SettingsScreenEnhanced';
 import WhisperModelScreen from '../screens/WhisperModelScreen';
 import WhisperSettingsScreen from '../screens/WhisperSettingsScreen';
+import TranscriptionModelsScreen from '../screens/TranscriptionModelsScreen';
+import TranscriptionSettingsScreen from '../screens/TranscriptionSettingsScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<BottomTabParamList>();
@@ -96,6 +98,16 @@ export default function AppNavigator() {
           name="WhisperSettings" 
           component={WhisperSettingsScreen}
           options={{ title: 'Whisper Settings' }}
+        />
+        <Stack.Screen 
+          name="TranscriptionModels" 
+          component={TranscriptionModelsScreen}
+          options={{ title: 'All Transcription Models' }}
+        />
+        <Stack.Screen 
+          name="TranscriptionSettings" 
+          component={TranscriptionSettingsScreen}
+          options={{ title: 'Transcription Settings', headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

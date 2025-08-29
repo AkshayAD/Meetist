@@ -156,16 +156,16 @@ export default function SettingsScreen() {
           
           <TouchableOpacity 
             style={styles.apiKeyItem}
-            onPress={() => navigation.navigate('WhisperModels' as never)}
+            onPress={() => navigation.navigate('TranscriptionSettings' as never)}
           >
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>Download Models</Text>
+              <Text style={styles.settingLabel}>Transcription Models</Text>
               <Text style={styles.settingDescription}>
-                Download Whisper models for offline use
+                Configure Gemini, Whisper & Device Speech Recognition
               </Text>
             </View>
             <View style={styles.apiKeyStatus}>
-              <Text style={styles.apiKeyStatusText}>Manage</Text>
+              <Text style={styles.apiKeyStatusText}>Configure</Text>
               <Ionicons name="chevron-forward" size={20} color="#2196F3" />
             </View>
           </TouchableOpacity>

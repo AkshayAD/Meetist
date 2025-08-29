@@ -1,6 +1,7 @@
 {
   "cli": {
-    "version": ">= 3.0.0"
+    "version": ">= 3.0.0",
+    "requireCommit": false
   },
   "build": {
     "development": {
@@ -14,15 +15,28 @@
     "preview": {
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
+        "gradleCommand": ":app:assembleRelease",
+        "image": "latest"
       },
-      "distribution": "internal"
+      "distribution": "internal",
+      "channel": "preview"
     },
     "production": {
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease"
-      }
+        "gradleCommand": ":app:assembleRelease",
+        "image": "latest"
+      },
+      "channel": "production"
+    },
+    "github": {
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleRelease",
+        "image": "latest"
+      },
+      "distribution": "internal",
+      "channel": "github-release"
     }
   },
   "submit": {
