@@ -7,10 +7,11 @@ import { RootStackParamList, BottomTabParamList } from '../types';
 
 // Import screens
 import HomeScreen from '../screens/HomeScreen';
-import RecordingScreen from '../screens/RecordingScreenEnhanced';
+import RecordingScreen from '../screens/RecordingScreenWhisper';
 import MeetingsScreen from '../screens/MeetingsScreen';
 import MeetingDetailScreen from '../screens/MeetingDetailScreen';
 import SettingsScreen from '../screens/SettingsScreenEnhanced';
+import ModelDownloadScreen from '../screens/ModelDownloadScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<BottomTabParamList>();
@@ -84,6 +85,11 @@ export default function AppNavigator() {
           name="MeetingDetail" 
           component={MeetingDetailScreen}
           options={{ title: 'Meeting Details' }}
+        />
+        <Stack.Screen 
+          name="ModelDownload" 
+          component={ModelDownloadScreen}
+          options={{ title: 'Whisper Models' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

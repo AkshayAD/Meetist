@@ -47,6 +47,7 @@ export type RootStackParamList = {
   Recording: undefined;
   MeetingDetail: { meetingId: string };
   Settings: undefined;
+  ModelDownload: undefined;
 };
 
 export type BottomTabParamList = {
