@@ -19,6 +19,7 @@ import { addMeeting } from '../store/slices/meetingsSlice';
 import { audioService } from '../services/AudioService';
 import { whisperTranscriptionService } from '../services/WhisperTranscriptionService';
 import { whisperModelService } from '../services/WhisperModelService';
+import { multiModelTranscriptionService } from '../services/MultiModelTranscriptionService';
 import { geminiService } from '../services/GeminiService';
 
 export default function RecordingScreenFinal() {

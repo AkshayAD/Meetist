@@ -13,6 +13,7 @@ import MeetingDetailScreen from '../screens/MeetingDetailScreen';
 import SettingsScreen from '../screens/SettingsScreenEnhanced';
 import WhisperModelScreen from '../screens/WhisperModelScreen';
 import WhisperSettingsScreen from '../screens/WhisperSettingsScreen';
+import TranscriptionModelsScreen from '../screens/TranscriptionModelsScreen';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<BottomTabParamList>();
@@ -96,6 +97,11 @@ export default function AppNavigator() {
           name="WhisperSettings" 
           component={WhisperSettingsScreen}
           options={{ title: 'Whisper Settings' }}
+        />
+        <Stack.Screen 
+          name="TranscriptionModels" 
+          component={TranscriptionModelsScreen}
+          options={{ title: 'All Transcription Models' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
