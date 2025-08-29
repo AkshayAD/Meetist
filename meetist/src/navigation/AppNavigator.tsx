@@ -5,12 +5,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { RootStackParamList, BottomTabParamList } from '../types';
 
-// Import screens (we'll create these next)
+// Import screens
 import HomeScreen from '../screens/HomeScreen';
-import RecordingScreen from '../screens/RecordingScreen';
+import RecordingScreen from '../screens/RecordingScreenEnhanced';
 import MeetingsScreen from '../screens/MeetingsScreen';
 import MeetingDetailScreen from '../screens/MeetingDetailScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import SettingsScreen from '../screens/SettingsScreenEnhanced';
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<BottomTabParamList>();
