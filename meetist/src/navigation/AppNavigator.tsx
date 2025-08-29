@@ -9,7 +9,7 @@ import { RootStackParamList, BottomTabParamList } from '../types';
 import HomeScreen from '../screens/HomeScreen';
 import RecordingScreen from '../screens/RecordingScreenReal';
 import MeetingsScreen from '../screens/MeetingsScreen';
-import MeetingDetailScreen from '../screens/MeetingDetailScreen';
+import MeetingDetailScreen from '../screens/MeetingDetailScreenEnhanced';
 import SettingsScreen from '../screens/SettingsScreenEnhanced';
 import WhisperModelScreen from '../screens/WhisperModelScreen';
 import WhisperSettingsScreen from '../screens/WhisperSettingsScreen';

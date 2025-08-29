@@ -23,6 +23,7 @@ import RealTranscriptionService, {
   TRANSCRIPTION_MODELS 
 } from '../services/RealTranscriptionService';
 import { Meeting } from '../types';
+import { SimpleAudioWaveform } from '../components/AudioWaveform';
 
 export default function RecordingScreenReal() {
   const navigation = useNavigation();
@@ -36,7 +37,9 @@ export default function RecordingScreenReal() {
   const [transcriptionResult, setTranscriptionResult] = useState<TranscriptionResult | null>(null);
   const [selectedModel, setSelectedModel] = useState<string>('');
   const [showModelPicker, setShowModelPicker] = useState(false);
+  const [audioLevel, setAudioLevel] = useState(0);
   const durationInterval = useRef<NodeJS.Timeout | null>(null);
+  const meteringInterval = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Load selected model
@@ -51,6 +54,9 @@ export default function RecordingScreenReal() {
     return () => {
       if (durationInterval.current) {
         clearInterval(durationInterval.current);
+      }
+      if (meteringInterval.current) {
+        clearInterval(meteringInterval.current);
       }
     };
   }, []);
@@ -75,10 +81,11 @@ export default function RecordingScreenReal() {
         playsInSilentModeIOS: true,
       });
 
-      // Start recording
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY
-      );
+      // Start recording with metering enabled
+      const { recording } = await Audio.Recording.createAsync({
+        ...Audio.RecordingOptionsPresets.HIGH_QUALITY,
+        isMeteringEnabled: true,
+      });
 
       setRecording(recording);
       setIsRecording(true);
@@ -90,6 +97,18 @@ export default function RecordingScreenReal() {
       durationInterval.current = setInterval(() => {
         setRecordingDuration(prev => prev + 1);
       }, 1000);
+
+      // Start audio metering for waveform
+      meteringInterval.current = setInterval(async () => {
+        if (recording) {
+          const status = await recording.getStatusAsync();
+          if (status.isRecording && status.metering !== undefined) {
+            // Normalize the metering value (typically ranges from -160 to 0 dB)
+            const normalizedLevel = Math.max(0, (status.metering + 160) / 160);
+            setAudioLevel(normalizedLevel);
+          }
+        }
+      }, 100);
     } catch (error) {
       console.error('Failed to start recording:', error);
       Alert.alert('Error', 'Failed to start recording. Please try again.');
@@ -103,9 +122,13 @@ export default function RecordingScreenReal() {
       if (durationInterval.current) {
         clearInterval(durationInterval.current);
       }
+      if (meteringInterval.current) {
+        clearInterval(meteringInterval.current);
+      }
 
       await recording.stopAndUnloadAsync();
       const uri = recording.getURI();
+      setAudioLevel(0);
       
       setRecording(null);
       setIsRecording(false);
@@ -255,18 +278,27 @@ export default function RecordingScreenReal() {
         </TouchableOpacity>
       </View>
 
+      {/* Audio Waveform Visualization */}
+      <View style={styles.waveformSection}>
+        <SimpleAudioWaveform
+          isRecording={isRecording}
+          audioLevel={audioLevel}
+          duration={recordingDuration}
+          color="#FF3B30"
+          backgroundColor="#FFF5F5"
+          height={120}
+          showTimer={true}
+        />
+      </View>
+
       {/* Recording Controls */}
       <View style={styles.recordingSection}>
         {isRecording ? (
           <>
-            <View style={styles.recordingIndicator}>
-              <View style={styles.recordingDot} />
-              <Text style={styles.recordingText}>Recording...</Text>
-            </View>
-            <Text style={styles.duration}>{formatDuration(recordingDuration)}</Text>
             <TouchableOpacity style={styles.stopButton} onPress={stopRecording}>
               <Ionicons name="stop-circle" size={80} color="#FF3B30" />
             </TouchableOpacity>
+            <Text style={styles.recordingStatusText}>Recording in progress...</Text>
           </>
         ) : (
           <>
@@ -486,11 +518,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
+  waveformSection: {
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: 12,
+    overflow: 'hidden',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
   recordingSection: {
     alignItems: 'center',
     padding: 32,
     backgroundColor: 'white',
     marginTop: 8,
+  },
+  recordingStatusText: {
+    fontSize: 16,
+    color: '#FF3B30',
+    marginTop: 12,
+    fontWeight: '500',
   },
   recordingIndicator: {
     flexDirection: 'row',
