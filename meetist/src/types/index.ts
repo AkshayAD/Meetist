@@ -1,21 +1,24 @@
 export interface Meeting {
   id: string;
   title: string;
-  date: Date;
+  date: Date | string;
   duration: number; // in seconds
   audioPath: string;
   transcription: Transcription;
   tags: string[];
   participants: string[];
-  createdAt: Date;
-  updatedAt: Date;
+  summary?: string;
+  keyPoints?: string[];
+  actionItems?: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface Transcription {
   text: string;
   segments: TranscriptionSegment[];
-  language: string;
-  processingStatus: 'pending' | 'processing' | 'completed' | 'error';
+  language?: string;
+  processingStatus?: 'pending' | 'processing' | 'completed' | 'error';
 }
 
 export interface TranscriptionSegment {
@@ -48,6 +51,7 @@ export type RootStackParamList = {
   MeetingDetail: { meetingId: string };
   Settings: undefined;
   ModelDownload: undefined;
+  TranscriptionSettings: undefined;
 };
 
 export type BottomTabParamList = {
