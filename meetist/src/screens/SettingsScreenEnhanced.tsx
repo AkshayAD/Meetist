@@ -18,9 +18,11 @@ import { AppSettings } from '../types';
 import StorageService from '../services/StorageService';
 import TranscriptionService from '../services/TranscriptionService';
 import * as FileSystem from 'expo-file-system';
+import { useNavigation } from '@react-navigation/native';
 
 export default function SettingsScreen() {
   const dispatch = useDispatch<AppDispatch>();
+  const navigation = useNavigation();
   const settings = useSelector((state: RootState) => state.settings);
   const [apiKeyModalVisible, setApiKeyModalVisible] = useState(false);
   const [apiKey, setApiKey] = useState('');
@@ -138,12 +140,28 @@ export default function SettingsScreen() {
           
           <TouchableOpacity 
             style={styles.apiKeyItem}
+            onPress={() => navigation.navigate('WhisperModels' as never)}
+          >
+            <View style={styles.settingInfo}>
+              <Text style={styles.settingLabel}>Whisper Models</Text>
+              <Text style={styles.settingDescription}>
+                Download and manage offline transcription models
+              </Text>
+            </View>
+            <View style={styles.apiKeyStatus}>
+              <Text style={styles.apiKeyStatusText}>Manage</Text>
+              <Ionicons name="chevron-forward" size={20} color="#2196F3" />
+            </View>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.apiKeyItem}
             onPress={() => setApiKeyModalVisible(true)}
           >
             <View style={styles.settingInfo}>
               <Text style={styles.settingLabel}>Gemini API Key</Text>
               <Text style={styles.settingDescription}>
-                Configure Gemini 2.0 Flash for enhanced transcription
+                Configure Gemini 2.5 Flash for AI summaries
               </Text>
             </View>
             <View style={styles.apiKeyStatus}>
