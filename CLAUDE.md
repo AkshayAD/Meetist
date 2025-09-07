@@ -135,7 +135,74 @@ When testing transcription:
 3. Test with short audio (< 1 min) initially
 4. Import audio files via document picker for consistency
 
+## Testing Commands
+
+### Setup Testing (when implemented)
+```bash
+cd meetist
+npm install --save-dev jest @testing-library/react-native @testing-library/jest-native
+npm run test              # Run all tests
+npm run test:unit        # Unit tests only  
+npm run test:integration # Integration tests
+npm run test:coverage    # Generate coverage report
+npm run test:watch       # Watch mode for development
+```
+
+### Performance Benchmarks
+- **Cold start time**: <3 seconds (target)
+- **Transcription speed**: <1 minute per 5 minutes audio
+- **Memory usage**: <500MB peak during transcription
+- **APK size**: <100MB including assets
+- **Battery usage**: <5% per hour of recording
+
+### Quality Standards
+- **Test Coverage**: 80% minimum overall, 100% for services
+- **Build Success**: 100% CI/CD success rate required
+- **Performance**: All benchmarks must pass
+- **Security**: OWASP Mobile Security checklist compliance
+- **Accessibility**: React Native accessibility guidelines
+
+### Development Workflow
+```bash
+# Standard development cycle
+npm start                 # Start development server
+npm run lint             # Run ESLint (when configured)
+npm run type-check       # TypeScript validation
+npm test                 # Run test suite
+npm run build-apk        # Local APK build using EAS
+```
+
+### CI/CD Pipeline Status
+- **GitHub Actions**: ✅ Fixed - uses v4 actions
+- **Automated Testing**: 🔄 Planned - will run tests before build
+- **APK Artifacts**: ✅ Working - 30-day retention
+- **Release Automation**: ✅ Working - auto-release on main branch
+- **Build Caching**: ✅ Implemented - faster subsequent builds
+
+### Recursive Development System
+This repository uses automated recursive development:
+- **DEVELOPMENT_ROADMAP.md**: Master progress tracking
+- **CURRENT_TASK.md**: Active task details
+- **RECURSIVE_PROMPT.md**: Template for continued development
+- **Quality Gates**: Every task must pass tests before completion
+
+### Current Priority Tasks
+1. Set up Jest testing framework (Phase 1)
+2. Create comprehensive service tests  
+3. Integrate device speech recognition
+4. Implement native Whisper module
+5. Add professional features (PDF export, security)
+
+### Development Guidelines
+- Every feature requires tests with 80% coverage minimum
+- No performance regressions allowed
+- Mobile-first responsive design maintained
+- Error handling for offline/poor network conditions
+- Memory leak prevention and monitoring
+- TypeScript strict mode compliance
+
 ## Current Branch Context
 Working on branch: terragon/implement-meetist-whisper-mvp
-Recent focus: Audio waveform visualization and AI meeting summaries
-Status: Real transcription working with Gemini, Whisper simulation in place
+Recent focus: Fixed GitHub Actions CI/CD pipeline, established testing framework
+Status: Infrastructure improved, ready for comprehensive testing implementation
+Development Mode: Recursive automated development system active
